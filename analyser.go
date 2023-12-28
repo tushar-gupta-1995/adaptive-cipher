@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	file, err := os.Open("sample_text\\chatGPTStory.txt")
+	file, err := os.Open("sample_text\random.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
