@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"log"
 	"math/rand"
@@ -21,9 +22,28 @@ type cipher struct {
 const delimmiter = "ab"
 
 func main() {
-	c := extractTotalText("sample_text\\random.txt")
 
-	encrypt := "this is text to encrypt don"
+	var textPath string
+	flag.StringVar(&textPath, "textPath", "default", "path to the file to encrypt text")
+	defaultText := "apple ball cat dog ear flag game high it join king land mine noon operation purchase queen rusty vaseline zebra win xmas yaarana"
+
+	var encrypt string
+	flag.StringVar(&encrypt, "e", "", "text to encrypt")
+	flag.Parse()
+
+	if encrypt == "" {
+		fmt.Println("Error: Text to encrypt is not provided, this is an encryption tool, not much to be done without something to encrypt")
+		os.Exit(1)
+	}
+
+	var c cipher
+	if textPath == "default" {
+		fmt.Println("Using default text to encrypt")
+		c = createCipherFromDefault(defaultText)
+	} else {
+		c = extractTotalText("sample_text\\random.txt")
+	}
+
 	re := regexp.MustCompile(`\s+`)
 
 	encrypt = re.ReplaceAllString(encrypt, "")
@@ -38,6 +58,8 @@ func main() {
 
 	c.encryptedText = encryptedText
 	c.delimmiter = delimmiter
+
+	fmt.Println(encryptedText)
 
 	fmt.Print(c.decrypt())
 
@@ -92,6 +114,21 @@ func extractTotalText(path string) cipher {
 
 	return cipher{
 		totalText: totalText,
+		cipherMap: cipherMap,
+	}
+}
+
+func createCipherFromDefault(text string) cipher {
+	cipherMap := make(map[string][]int)
+	for count, text := range text {
+		s := string(text)
+		if s == " " {
+			continue
+		}
+		cipherMap[s] = append(cipherMap[s], count)
+	}
+	return cipher{
+		totalText: text,
 		cipherMap: cipherMap,
 	}
 }
