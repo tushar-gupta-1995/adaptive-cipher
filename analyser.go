@@ -29,19 +29,42 @@ func main() {
 
 	var encrypt string
 	flag.StringVar(&encrypt, "e", "", "text to encrypt")
+
+	var decrypt string
+	flag.StringVar(&decrypt, "d", "", "text to decrypt")
+
+	h := flag.Bool("help", false, "show help")
+
 	flag.Parse()
 
-	if encrypt == "" {
-		fmt.Println("Error: Text to encrypt is not provided, this is an encryption tool, not much to be done without something to encrypt")
+	if *h {
+		help()
+		os.Exit(0)
+	}
+
+	if encrypt == "" && decrypt == "" {
+		fmt.Println("Error: Text to encrypt is not provided, this is an encryption tool, not much to be done without something to decrypt")
+		os.Exit(1)
+	}
+
+	if encrypt != "" && decrypt != "" {
+		fmt.Println("Error: encrypt and decrypt at the same time?..are you sure?")
 		os.Exit(1)
 	}
 
 	var c cipher
 	if textPath == "default" {
-		fmt.Println("Using default text to encrypt")
+		fmt.Println("Using default text to encrypt/decrypt")
 		c = createCipherFromDefault(defaultText)
 	} else {
 		c = extractTotalText("sample_text\\random.txt")
+	}
+
+	if decrypt != "" {
+		c.encryptedText = decrypt
+		c.delimmiter = delimmiter
+		fmt.Println(c.decrypt())
+		os.Exit(0)
 	}
 
 	re := regexp.MustCompile(`\s+`)
@@ -56,12 +79,9 @@ func main() {
 		encryptedText = encryptedText + delimmiter + strconv.Itoa(randomValue)
 	}
 
-	c.encryptedText = encryptedText
-	c.delimmiter = delimmiter
-
 	fmt.Println(encryptedText)
 
-	fmt.Print(c.decrypt())
+	// fmt.Print(c.decrypt())
 
 }
 
@@ -131,4 +151,14 @@ func createCipherFromDefault(text string) cipher {
 		totalText: text,
 		cipherMap: cipherMap,
 	}
+}
+
+func help() {
+	fmt.Println("book-cipher is a cli tool that uses the old fashioned book to encrypt plan text, you can provide a path to text file or not provide it and the tool will use the default text to encrypt")
+
+	fmt.Println("Usage to encrypt: .\\adaptive-cipher.exe -e=\"<your text>\"")
+
+	fmt.Println("Usage to decrypt: .\\adaptive-cipher.exe -d=\"<your decrypted text>\"")
+
+	fmt.Println("Note: if you are using a custom file path to encrypt make sure to provide the same for decrypting as well")
 }
