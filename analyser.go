@@ -25,7 +25,7 @@ func main() {
 
 	var textPath string
 	flag.StringVar(&textPath, "textPath", "default", "path to the file to encrypt text")
-	defaultText := "apple ball cat dog ear flag game high it join king land mine noon operation purchase queen rusty vaseline zebra win xmas yaarana"
+	defaultText := "apple A ball cat dog ear flag game high it join king land mine noon operation purchase queen rusty vaseline zebra win xmas yaarana B J D H I S C E E F B G H I J K L M N TTTTTTTTTT O P Q R W X Y Z ZZZZZZ BBBBBBBBB EEEEEEEEEEEEEEEEEE"
 
 	var encrypt string
 	flag.StringVar(&encrypt, "e", "", "text to encrypt")
